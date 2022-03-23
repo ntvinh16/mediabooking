@@ -58,4 +58,13 @@ router.get('/getAll', (req, res) => {
     })
 })
 
+router.post('/getSingle', (req, res) => {
+    const idStatus = req.body.idStatus;
+    let query = `select idStatus, statusName from status where idStatus = ${idStatus}`;
+    connection.query(query, (err, result) => {
+        if (err) return res.status(400).json({ success: false, message: "Erorr"})
+        return res.status(200).json({ success: true, message: "Get success", result});
+    })
+})
+
 module.exports = router;
