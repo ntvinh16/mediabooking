@@ -4,16 +4,16 @@ const connection = require('../config/connectDB');
 
 
 router.post('/add', (req, res) => {
-    const {idStaff, idSpecialist, image, level, contentHTML, contentMarkdown, description} = req.body;
+    const {idStaff, idSpecialist, contentHTML, contentMarkdown} = req.body;
 
-    let query = `insert into doctor_info(idStaff, idSpecialist, image, level, contentHTML, contentMarkdown, description)
-                 values(${idStaff}, ${idSpecialist}, '${image}', '${level}', '${contentHTML}', '${contentMarkdown}', '${description}')
-                 ON DUPLICATE KEY UPDATE idSpecialist = ${idSpecialist}, image = '${image}', level = '${level}', 
-                 contentHTML = '${contentHTML}', contentMarkdown = '${contentMarkdown}', description = '${description}'`;
+    let query = `insert into doctor_info(idStaff, idSpecialist, contentHTML, contentMarkdown)
+                 values(${idStaff}, ${idSpecialist}, '${contentHTML}', '${contentMarkdown}')
+                 ON DUPLICATE KEY UPDATE idSpecialist = ${idSpecialist}, 
+                 contentHTML = '${contentHTML}', contentMarkdown = '${contentMarkdown}'`;
     connection.query(query, (err, result) => {
-        console.log(err);
+       
         if(err) return res.status(400).json({success: false, message: "Erorr"});
-        return res.status(200).json({success: true, message: "Add success", idStaff, idSpecialist, image, level, contentHTML, contentMarkdown, description});
+        return res.status(200).json({success: true, message: "Add success", idStaff, idSpecialist, contentHTML, contentMarkdown});
     })
 })
 
@@ -56,6 +56,21 @@ router.get('/getAllSpecialist', (req, res) => {
         return res.status(200).json({success: true, message: "Get all specialist success", result});
     })
 })
+
+
+
+// router.post('/getAllTime', (req, res) => {
+//     const idStaff = req.body.idStaff;
+//     let query1 = `select id`
+//     let query = `select * from examination_hours where idStaff = ${idStaff} `;
+
+//     connection.query(query, (err, result) => {
+//         if(err) return res.status(400).json({success: false, message: "Erorr"});
+//         return res.status(200).json({success: true, message: "Get all time success", result});
+//     })
+// })
+
+
 
 
 

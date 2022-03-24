@@ -12,10 +12,9 @@ module.exports = (sequelize, DataTypes) => {
     Doctor_Info.init({
         idStaff: DataTypes.INTEGER,
         idSpecialist: DataTypes.INTEGER,
-        level: DataTypes.STRING,
         contentHTML: DataTypes.TEXT,
         contentMarkdown: DataTypes.TEXT,
-        description: DataTypes.TEXT
+        
     }, {
         sequelize,
         modelName: 'Doctor_Info',

@@ -8,6 +8,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      idStaff: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: 'doctor_info', key: 'idStaff' }
+      },
       slotTime: {
         type: Sequelize.STRING
       },
