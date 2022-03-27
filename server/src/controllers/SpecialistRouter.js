@@ -5,7 +5,7 @@ const connection = require('../config/connectDB');
 
 router.post('/add', (req, res) => {
     const { departmentName, price, image, description } = req.body;
-    let query = `select departmentName from specialist where departmentName = "${departmentName}"`;
+    let query = `select departmentName from specialist where departmentName = '${departmentName}' and active = 1`;
     connection.query(query, async (err, result) => {
         if (err) return res.status(400).json({ success: false, message: "Erorr", result});
         if (result.length != 0) {

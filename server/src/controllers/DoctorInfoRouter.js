@@ -1,9 +1,11 @@
 const express = require('express')
 const router = express.Router();
 const connection = require('../config/connectDB');
+const { checkvaluesStaff } = require('./middleware/booking_middleware');
+const middleware = require('./middleware/booking_middleware')
 
 
-router.post('/add', (req, res) => {
+router.post('/add', checkvaluesStaff, (req, res) => {
     const {idStaff, idSpecialist, contentHTML, contentMarkdown} = req.body;
 
     let query = `insert into doctor_info(idStaff, idSpecialist, contentHTML, contentMarkdown)
@@ -26,9 +28,9 @@ router.get('/getAllDoctor', (req, res) => {
     })
 })
 
-router.post('/getDoctor', (req, res) => {
+router.post('/getDoctor',checkvaluesStaff, (req, res) => {
     const idStaff = req.body.idStaff;
-    let query = `select idStaff from staff where idStaff = ${idStaff} and idRole = 2`
+    let query = `select * from staff, doctor_info where staff.idStaff = doctor_info.idStaff and doctor_info.idStaff = ${idStaff}`
     
     connection.query(query, async (err, result) => {
         if(err) return res.status(400).json({success: false, message: "Erorr"})
@@ -39,9 +41,9 @@ router.post('/getDoctor', (req, res) => {
     
 })
 
-router.post('/getSpecialist', (req, res) => {
+router.post('/getDoctorSpecialist', (req, res) => {
     const idSpecialist = req.body.idSpecialist;
-    let query = `select idSpecialist, departmentName from specialist where idSpecialist = ${idSpecialist}`
+    let query = `select * from staff, doctor_info where staff.idStaff= doctor_info.idStaff and idSpecialist = ${idSpecialist}`
     connection.query(query, async (err, result) => {
         if(err) return res.status(400).json({success: false, message: "Erorr"})
         return res.status(200).json({success: true, message: "Get specialist success", result});
@@ -59,16 +61,7 @@ router.get('/getAllSpecialist', (req, res) => {
 
 
 
-// router.post('/getAllTime', (req, res) => {
-//     const idStaff = req.body.idStaff;
-//     let query1 = `select id`
-//     let query = `select * from examination_hours where idStaff = ${idStaff} `;
 
-//     connection.query(query, (err, result) => {
-//         if(err) return res.status(400).json({success: false, message: "Erorr"});
-//         return res.status(200).json({success: true, message: "Get all time success", result});
-//     })
-// })
 
 
 

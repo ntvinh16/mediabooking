@@ -11,17 +11,10 @@ module.exports = {
       idBooking: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: 'Booking', key: 'idBooking' },
-      },
-      date: {
-        type: Sequelize.DATE
+        references: { model: 'Booking', key: 'idBooking' }
       },
       description: {
         type: Sequelize.TEXT
-      },
-      idPatient: {
-        type: Sequelize.INTEGER,
-        references: { model: 'History', key: 'idPatient' }
       }
     });
   },

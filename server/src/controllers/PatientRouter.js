@@ -19,7 +19,7 @@ router.post('/add', async (req, res) => {
         if(result.length != 0){
             return res.status(200).json({success: true, message:"Email already exist"});
         }else{
-            let query1 = `insert into patient(name, email, password, phoneNumber, address, date, gender, active) values('${name}', '${email}', '${hashPassword}', '${phoneNumber}', '${address}', '${date}', ${gender}, 1)`;
+            let query1 = `insert into patient(name, email, password, phoneNumber, address, date, gender, active) values('${name}', '${email}', '${hashPassword}', '${phoneNumber}', '${address}', '${date}', '${gender}', 1)`;
                 connection.query(query1, (err, result) => {
                     if(err) return res.status(401).json({success: false, message: "Erorr1"});
                     return res.status(200).json({success: true, message: "Create success", name, email, hashPassword, phoneNumber, phoneNumber, date, gender})
@@ -76,7 +76,7 @@ router.patch('/edit', (req, res) => {
         if(date === '') {dates = oldDate} else {dates = date}
         if(gender === '') {genders = oldGender} else {genders = gender}
 
-        let query1 = `update patient set name = '${names}', email = '${emails}',  phoneNumber = '${phoneNumbers}', address = '${addresss}', date = '${dates}', gender = ${genders} where idPatient='${idPatient}'`
+        let query1 = `update patient set name = '${names}', email = '${emails}',  phoneNumber = '${phoneNumbers}', address = '${addresss}', date = '${dates}', gender = '${genders}' where idPatient='${idPatient}'`
 
         connection.query(query1, (err, result) => {
             if(err) return res.status(400).json({success: false, message: "Erorr1"})

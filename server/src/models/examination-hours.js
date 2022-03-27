@@ -15,7 +15,6 @@ module.exports = (sequelize, DataTypes) => {
         }
     }
     Examination_Hours.init({
-        idStaff: DataTypes.INTEGER,
         slotTime: DataTypes.STRING,
         active: DataTypes.INTEGER,
         currentDate: DataTypes.STRING

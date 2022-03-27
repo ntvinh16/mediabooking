@@ -6,7 +6,7 @@ const connection = require('../config/connectDB');
 router.post('/add', (req, res) => {
     const {slotTime, currentDate, idStaff} = req.body;
     
-    let query = `insert into examination_hours(idStaff, slotTime, currentDate, active) values(${idStaff}, '${slotTime}', '${currentDate}', 1)`; 
+    let query = `insert into examination_hours(slotTime, currentDate, active) values('${slotTime}', '${currentDate}', 1)`; 
                  
     connection.query(query, (err, result) => {
         if(err) return res.status(400).json({success: false, message: "Erorr"});
@@ -15,25 +15,26 @@ router.post('/add', (req, res) => {
 })
 
 router.patch('/edit', (req, res) => {
-    const {idTime, slotTime, idStaff} = req.body;
-    let query = `select idTime, idStaff, slotTime from examination_hours where idTime = ${idTime}`;
+    const {idTime, slotTime, currentDate} = req.body;
+    let query = `select idTime, slotTime, currentDate from examination_hours where idTime = ${idTime}`;
 
     connection.query(query, (err, result) => {
  
         if(err) return res.status(400).json({success: false, message: "Erorr"});
  
         let slotTimeOld = result[0].slotTime;
-        let idStaffOld = result[0].idStaff;
+        let currentDateOld = result[0].currentDate;
 
-        let slotTimes;
-        let idStaffs;
+        
+
+        let slotTimes, currentDates;
 
 
         if(slotTime === '') {slotTimes = slotTimeOld} else {slotTimes = slotTime}
-        if(idStaff === '') {idStaffs = idStaffOld} else {idStaffs = idStaff}
+        if(currentDate === '') {currentDates = currentDateOld} else {currentDates = currentDate}
 
         
-        let query1 = `update examination_hours set slotTime = '${slotTimes}', idStaff = ${idStaffs} where idTime = ${idTime}`;
+        let query1 = `update examination_hours set slotTime = '${slotTimes}', currentDate = ${currentDates} where idTime = ${idTime}`;
         connection.query(query1, (err, result1) => {
             if(err) return res.status(400).json({success: false, message: "Erorr1"});
             return res.status(200).json({success: true, message: "Edit success" });
@@ -51,6 +52,13 @@ router.delete('/delete', (req, res) => {
     })
 })
 
+router.get('/getAll', (req, res) => {
+    let query = `select * from examination_hours where active = 1`;
+    connection.query(query, (err, result) => {
+        if(err) return res.status(400).json({success: false, message: "Erorr"});
+        return res.status(200).json({success: true, message: "Get all time success", result})
+    })
+})
 
 router.post('/getSingle', (req, res) => {
     const idTime = req.body.idTime;
@@ -61,13 +69,6 @@ router.post('/getSingle', (req, res) => {
     })
 })
 
-router.post('/getAllDocTor', (req, res) => {
-    const idStaff = req.body.idStaff;
-    let query = `select slotTime from examination_hours where idStaff = ${idStaff} and active = 1`;
-    connection.query(query, (err, result) => {
-        if(err) return res.status(400).json({success: false, message: "Erorr"});
-        return res.status(200).json({success: true, message: "Get slot time success", result})
-    })
-})
+
 
 module.exports = router;

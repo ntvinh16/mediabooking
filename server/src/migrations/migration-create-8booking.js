@@ -29,7 +29,7 @@ module.exports = {
         references: { model: 'Patient', key: 'idPatient' },
       },
       date: {
-        type: Sequelize.DATE
+        type: Sequelize.STRING
       },
       idSpecialist: {
         type: Sequelize.INTEGER,

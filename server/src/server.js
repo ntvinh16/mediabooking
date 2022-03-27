@@ -11,6 +11,8 @@ const examinationHoursRouter = require('./controllers/ExaminationHoursRouter');
 const statusRouter = require('./controllers/StatusRouter');
 const reExaminationRouter = require('./controllers/ReexaminationRouter');
 const bookingRouter = require('./controllers/BookingRouter')
+const doctorTimeRouter = require('./controllers/DoctorTimeRouter')
+const historyRouter = require('./controllers/HistoryRouter')
 
 
 // import cors from 'cors';
@@ -32,6 +34,10 @@ app.use('/api/examinationhours', examinationHoursRouter)
 app.use('/api/status', statusRouter)
 app.use('/api/reexamination', reExaminationRouter)
 app.use('/api/booking', bookingRouter)
+app.use('/api/doctorTime', doctorTimeRouter)
+app.use('/api/history', historyRouter)
+
+
 
 
 

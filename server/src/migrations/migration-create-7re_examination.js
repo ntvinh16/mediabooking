@@ -8,15 +8,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      idStaff: {
+      idBooking: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        references: { model: 'Staff', key: 'idStaff' },
-      },
-      idPatient: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: { model: 'Patient', key: 'idPatient' },
+        references: { model: 'Booking', key: 'idBooking' },
       },
       idTime: {
         type: Sequelize.INTEGER,
@@ -24,7 +19,7 @@ module.exports = {
         references: { model: 'Examination_Hours', key: 'idTime' },
       },
       date: {
-        type: Sequelize.DATE
+        type: Sequelize.STRING
       },
       description: {
         type: Sequelize.TEXT

@@ -14,10 +14,9 @@ module.exports = (sequelize, DataTypes) => {
         }
     }
     Re_Examination.init({
-        idStaff: DataTypes.INTEGER,
-        idPatient: DataTypes.INTEGER,
         idTime: DataTypes.INTEGER,
-        date: DataTypes.DATE,
+        idBooking: DataTypes.INTEGER,
+        date: DataTypes.STRING,
         description: DataTypes.TEXT,
         active: DataTypes.INTEGER
     }, {

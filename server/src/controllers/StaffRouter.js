@@ -16,7 +16,7 @@ router.post('/add', async (req, res) => {
         if(result.length != 0) {
             return res.status(200).json({success: true, message:"Email already exist"})
         } else {
-            let query1 = `insert into staff(name, email, password, address, gender, idRole, phoneNumber, image, active) values('${name}', '${email}', '${hashPassword}', '${address}', ${gender}, '${idRole}', '${phoneNumber}', '${image}', 1)`;
+            let query1 = `insert into staff(name, email, password, address, gender, idRole, phoneNumber, image, active) values('${name}', '${email}', '${hashPassword}', '${address}', '${gender}', '${idRole}', '${phoneNumber}', '${image}', 1)`;
             connection.query(query1, (err, result) => {
                 if(err) return res.status(400).json({success: false, message: "Erorr1"});
             
@@ -80,7 +80,7 @@ router.patch('/edit', (req, res) => {
         
         
         let query1 = `update staff set name = '${names}', email = '${emails}', address = '${addresss}'
-        , gender = ${genders}, idRole = '${idRoles}', phoneNumber = '${phoneNumbers}', image = '${images}'
+        , gender = '${genders}', idRole = '${idRoles}', phoneNumber = '${phoneNumbers}', image = '${images}'
          where idStaff='${idStaff}'`
 
         connection.query(query1, (err, result) => {

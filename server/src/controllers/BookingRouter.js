@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router();
 const connection = require('../config/connectDB');
-const { checkvaluesBooking, checkvaluesTime, checkvaluesStatus } = require('./middleware/booking_middleware');
+// const { checkvaluesBooking, checkvaluesTime, checkvaluesStatus } = require('./middleware/booking_middleware');
 const middleware = require('./middleware/booking_middleware');
 
 const arrMiddleware = [middleware.checkvaluesPatient, middleware.checkvaluesSpecialist,
@@ -15,12 +15,36 @@ router.post('/add', arrMiddleware, (req, res) => {
 
      const { idTime, idStaff, idStatus, idPatient, date, idSpecialist } = req.body;
 
-     let query = `insert into booking(idTime, idStaff, idStatus, idPatient, date, idSpecialist)
-                  values(${idTime}, ${idStaff}, ${idStatus}, ${idPatient}, '${date}', ${idSpecialist})`;
-     connection.query(query, (err, result) => {
-          if (err) return res.status(400).json({ success: false, message: "Erorr add booking" });
-          return res.status(200).json({ success: true, message: "Add booking success" });
+     let queryCheck = `select idTime, idPatient from booking where idStaff = ${idStaff}`;
+     connection.query(queryCheck, (err, resultCheck) => {
+          if (err) return res.status(400).json({ success: false, message: "Erorr" });
+          var checkTime = true;
+          var checkPatient = true;
+          for (let i = 0; i < resultCheck.length; i++) {
+               if (idTime === resultCheck[i].idTime.toString()) {
+                    checkTime = false;
+                    break;
+               }
+          }          
+          for (let i = 0; i < resultCheck.length; i++) {
+               if (idPatient === resultCheck[i].idPatient.toString()) {
+                    checkPatient = false;
+                    break;
+               }
+          }
+
+          if (checkTime && checkPatient) {
+               let query = `insert into booking(idTime, idStaff, idStatus, idPatient, date, idSpecialist, active)
+               values(${idTime}, ${idStaff}, ${idStatus}, ${idPatient}, '${date}', ${idSpecialist}, 1)`;
+               connection.query(query, (err, result) => {
+                    if (err) return res.status(400).json({ success: false, message: "Erorr add booking" });
+                    return res.status(200).json({ success: true, message: "Add booking success" });
+               })
+          } else return res.status(200).json({ success: true, message: "Time reverved" })
+
      })
+
+
 })
 router.get('/getAll', (req, res) => {
      let query = `select * from booking`;
@@ -41,28 +65,24 @@ router.post('/getSingle', (req, res) => {
      })
 })
 
-router.post('/edit', (req, res) => {
-     const {idBooking, idTime, idStatus } = req.body;
-     
-     let query = `select idTime, idStatus from booking where idBooking = ${idBooking}`;
+router.delete('/delete', (req, res) => {
+     const idBooking = req.body.idBooking;
+     let query = `update booking set active = 0 where idBooking = ${idBooking}`;
+
      connection.query(query, (err, result) => {
-          if (err) return res.status(400).json({ success: false, message: "Erorr" });
-          if (result.length === 0) return res.status(200).json({ success: true, message: "Values booking empty!!!" })
-          let oldIdTime = result[0].idTime;
-          let oldIdStatus = result[0].idStatus;
+         if(err) return res.status(400).json({success: false, message: "Erorr"})
+         return res.status(200).json({success: true, message: "Delete success"})
+     })
+})
 
-          let idTimes, idStatuss;
 
-          if(idTime === '') {idTimes = oldIdTime} else {idTimes = idTime};
-          if(idStatus === '') {idStatuss = oldIdStatus} else {idStatuss = idStatus};
+router.post('/getDoctorTime', (req, res) => {
+     const idStaff = req.body.idStaff;
+     let query = `select idTime from booking where idStaff = ${idStaff}`;
 
-          let query1 = `update booking set idTime = ${idTimes}, idStatus = ${idStatuss} where idBooking = ${idBooking}`;
-
-          connection.query(query1, (err1, result1) => {
-               if(err1) return res.status(400).json({success: false, message: "Erorr1 not edit booking"});
-               return res.status(200).json({success: true, message: "Edit booking success", idTimes, idStatuss});
-          })
-
+     connection.query(query, (err, result) => {
+          if (err) return res.status(200).json({ success: false, message: "Erorr get time doctor" });
+          return res.status(200).json({ success: true, message: "Get time doctor success", result });
      })
 })
 
