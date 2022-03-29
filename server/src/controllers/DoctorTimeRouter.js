@@ -30,7 +30,7 @@ router.post('/add', (req, res) => {
 
 })
 
-router.get('/getAllTime', (req, res) => {
+router.get('/getSingleTime', (req, res) => {
     const idStaff = req.query.idStaff;
 
     let query = `select * from doctor_time where idStaff = ${idStaff}`;
@@ -41,6 +41,14 @@ router.get('/getAllTime', (req, res) => {
 })
 
 
+router.get('/getAllTime', (req, res) => {
+    let query = `select staff.name, examination_hours.slotTime, doctor_time.date from doctor_time, examination_hours, staff
+                where doctor_time.idTime = examination_hours.idTime and staff.idStaff = doctor_time.idStaff`;
+    connection.query(query, (err, result) => {
+        if(err) return res.status(400).json({success: false, message: "Erorr get all time doctor"})
+        return res.status(200).json({success: true, message: "Get all time doctor success", result});
+    })
+})
 
 
 module.exports = router;
