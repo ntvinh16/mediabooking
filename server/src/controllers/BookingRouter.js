@@ -44,7 +44,6 @@ router.post('/add', arrMiddleware, (req, res) => {
 
                               let queryUpdateDoctorTime = `update doctor_time set active = 0 where idTime = ${idTime}`;
                               connection.query(queryUpdateDoctorTime, (err, resultUDT) => {
-                                   // console.log(err);
                                    if (err) return res.status(400).json({ success: false, message: "Erorr update time" })
                                    return res.status(200).json({ success: true, message: "Booking success" });
                               })

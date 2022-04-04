@@ -50,5 +50,16 @@ router.get('/getAllTime', (req, res) => {
     })
 })
 
+router.get('/getAllTimeInDay', (req, res) => {
+    const {date, idStaff} = req.body
+
+    let query = `select examination_hours.slotTime from examination_hours, doctor_time where doctor_time.idStaff = ${idStaff} and examination_hours.idTime = doctor_time.idTime and date = '${date}' and doctor_time.active = 1`
+    connection.query(query, (err, result) => {
+        console.log(err)
+        if(err) return res.status(400).json({success: false, message: "Erorr date"})
+        return res.status(200).json({success: true, message: "Success", result});
+    })
+})
+
 
 module.exports = router;
