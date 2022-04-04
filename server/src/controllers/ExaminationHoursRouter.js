@@ -60,10 +60,12 @@ router.get('/getAll', (req, res) => {
     })
 })
 
-router.post('/getSingle', (req, res) => {
-    const idTime = req.body.idTime;
+router.get('/getSingle', (req, res) => {
+    const idTime = req.query.idTime;
+    console.log(idTime)
     let query = `select * from examination_hours where idTime = ${idTime} and active = 1`;
     connection.query(query, (err, result) => {
+        console.log(err)
         if(err) return res.status(400).json({success: false, message: "Erorr"});
         return res.status(200).json({success: true, message: "Get slot time success", result})
     })

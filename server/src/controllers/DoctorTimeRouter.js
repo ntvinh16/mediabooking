@@ -18,7 +18,7 @@ router.post('/add', (req, res) => {
             }
         }
         if (check) {
-            let query = `insert into doctor_time(idStaff, idTime, date) values (${idStaff}, ${idTime}, '${date}')`;
+            let query = `insert into doctor_time(idStaff, idTime, date, active) values (${idStaff}, ${idTime}, '${date}', 1)`;
             connection.query(query, (err, result) => {
                 if (err) return res.status(200).json({ success: false, message: "Erorr add not time" });
                 return res.status(200).json({ success: true, message: "Add time success" });

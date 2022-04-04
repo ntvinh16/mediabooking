@@ -15,37 +15,47 @@ router.post('/add', arrMiddleware, (req, res) => {
 
      const { idTime, idStaff, idStatus, idPatient, date, idSpecialist } = req.body;
 
-     let queryCheck = `select idTime, idPatient from booking where idStaff = ${idStaff}`;
-     connection.query(queryCheck, (err, resultCheck) => {
+     let queryCheckStaff = `select idTime, idPatient from booking where idStaff = ${idStaff} and active = 1`;
+     connection.query(queryCheckStaff, (err, resultCheckStaff) => {
           if (err) return res.status(400).json({ success: false, message: "Erorr" });
-          var checkTime = true;
-          var checkPatient = true;
-          for (let i = 0; i < resultCheck.length; i++) {
-               if (idTime === resultCheck[i].idTime.toString()) {
-                    checkTime = false;
-                    break;
-               }
-          }          
-          for (let i = 0; i < resultCheck.length; i++) {
-               if (idPatient === resultCheck[i].idPatient.toString()) {
-                    checkPatient = false;
+          var checkTimeStaff = true;
+          for (let i = 0; i < resultCheckStaff.length; i++) {
+               if (idTime === resultCheckStaff[i].idTime.toString()) {
+                    checkTimeStaff = false;
                     break;
                }
           }
+          if (checkTimeStaff) {
+               let queryChekPatient = `select idTime, idStaff from booking where idPatient = ${idPatient}`;
+               connection.query(queryChekPatient, (err, resultCheckPatient) => {
+                    if (err) return res.status(400).json({ success: false, message: "Erorr check patient" })
+                    var checkTimePatient = true;
+                    for (let i = 0; i < resultCheckPatient.length; i++) {
+                         if (idTime === resultCheckPatient[i].idTime.toString()) {
+                              checkTimePatient = false;
+                              break;
+                         }
+                    }
+                    if (checkTimePatient) {
+                         let query = `insert into booking(idTime, idStaff, idStatus, idPatient, date, idSpecialist, active)
+                         values(${idTime}, ${idStaff}, ${idStatus}, ${idPatient}, '${date}', ${idSpecialist}, 1)`;
+                         connection.query(query, (err, result) => {
+                              if (err) return res.status(400).json({ success: false, message: "Erorr add booking" });
 
-          if (checkTime && checkPatient) {
-               let query = `insert into booking(idTime, idStaff, idStatus, idPatient, date, idSpecialist, active)
-               values(${idTime}, ${idStaff}, ${idStatus}, ${idPatient}, '${date}', ${idSpecialist}, 1)`;
-               connection.query(query, (err, result) => {
-                    if (err) return res.status(400).json({ success: false, message: "Erorr add booking" });
-                    return res.status(200).json({ success: true, message: "Add booking success" });
+                              let queryUpdateDoctorTime = `update doctor_time set active = 0 where idTime = ${idTime}`;
+                              connection.query(queryUpdateDoctorTime, (err, resultUDT) => {
+                                   // console.log(err);
+                                   if (err) return res.status(400).json({ success: false, message: "Erorr update time" })
+                                   return res.status(200).json({ success: true, message: "Booking success" });
+                              })
+                         })
+
+                    }
                })
           } else return res.status(200).json({ success: true, message: "Time reverved" })
-
      })
-
-
 })
+
 router.get('/getAll', (req, res) => {
      let query = `select * from booking`;
 
@@ -70,11 +80,10 @@ router.delete('/delete', (req, res) => {
      let query = `update booking set active = 0 where idBooking = ${idBooking}`;
 
      connection.query(query, (err, result) => {
-         if(err) return res.status(400).json({success: false, message: "Erorr"})
-         return res.status(200).json({success: true, message: "Delete success"})
+          if (err) return res.status(400).json({ success: false, message: "Erorr" })
+          return res.status(200).json({ success: true, message: "Delete success" })
      })
 })
-
 
 router.post('/getDoctorTime', (req, res) => {
      const idStaff = req.body.idStaff;

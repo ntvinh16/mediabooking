@@ -32,6 +32,7 @@ const middleware = {
             next()
         })
     },
+
     checkvaluesPatient: (req, res, next) => {
         const idPatient = req.body.idPatient;
         let query2 = `select * from patient where idPatient = ${idPatient} and active = 1`;
@@ -41,6 +42,7 @@ const middleware = {
             next()
         })
     },
+
     checkvaluesStatus: (req, res, next) => {
         const idStatus = req.body.idStatus;
         let query3 = `select * from status where idStatus = ${idStatus} and active = 1`;
@@ -50,6 +52,7 @@ const middleware = {
             next()
         })
     },
+    
     checkvaluesSpecialist: (req, res, next) => {
         const idSpecialist = req.body.idSpecialist;
         let query4 = `select * from specialist where idSpecialist = ${idSpecialist} and active = 1`;
