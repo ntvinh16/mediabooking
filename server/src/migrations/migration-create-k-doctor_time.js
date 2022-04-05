@@ -20,6 +20,9 @@ module.exports = {
       },
       date: {
         type: Sequelize.STRING
+      },
+      active: {
+        type: Sequelize.INTEGER
       }
     });
   },

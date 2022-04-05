@@ -56,7 +56,7 @@ router.post('/add', arrMiddleware, (req, res) => {
 })
 
 router.get('/getAll', (req, res) => {
-     let query = `select * from booking`;
+     let query = `select da from booking`;
 
      connection.query(query, (err, result) => {
           if (err) return res.status(400).json({ success: false, message: "Erorr get all booking" });

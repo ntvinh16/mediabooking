@@ -12,7 +12,8 @@ module.exports = (sequelize, DataTypes) => {
     Doctor_Time.init({
         idStaff: DataTypes.INTEGER,
         idTime: DataTypes.INTEGER,
-        date: DataTypes.STRING
+        date: DataTypes.STRING,
+        active: DataTypes.INTEGER
     },
      {
         sequelize,

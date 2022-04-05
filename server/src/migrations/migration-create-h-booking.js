@@ -35,6 +35,9 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false,
         references: { model: 'Specialist', key: 'idSpecialist' },
+      },
+      active: {
+        type: Sequelize.INTEGER
       }
     });
   },
