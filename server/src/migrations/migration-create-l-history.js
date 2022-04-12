@@ -13,8 +13,23 @@ module.exports = {
         allowNull: false,
         references: { model: 'Booking', key: 'idBooking' }
       },
-      description: {
-        type: Sequelize.TEXT
+      idTime: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: 'examination_hours', key: 'idTime' }
+      },
+      date: {
+        type: Sequelize.STRING
+      },
+      idStaff: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: 'doctor_info', key: 'idStaff' }
+      },
+      idPatient: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: 'patient', key: 'idPatient' }
       }
     });
   },

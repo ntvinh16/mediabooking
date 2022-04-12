@@ -1,5 +1,6 @@
 
 const express = require('express')
+const nodemailer = require('nodemailer')
 import bodyParser from "body-parser";
 const staffRouter = require('./controllers/StaffRouter')
 const loginRouter = require('./controllers/LoginRouter')
@@ -13,10 +14,15 @@ const reExaminationRouter = require('./controllers/ReexaminationRouter');
 const bookingRouter = require('./controllers/BookingRouter')
 const doctorTimeRouter = require('./controllers/DoctorTimeRouter')
 const historyRouter = require('./controllers/HistoryRouter')
+const emailRouter = require('./controllers/emailRouter')
+
 
 
 // import cors from 'cors';
 let app = express();
+
+
+// let nodemailer = nodemailer();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })) // use req.body
@@ -36,9 +42,7 @@ app.use('/api/reexamination', reExaminationRouter)
 app.use('/api/booking', bookingRouter)
 app.use('/api/doctorTime', doctorTimeRouter)
 app.use('/api/history', historyRouter)
-
-
-
+app.use('/api/email', emailRouter)
 
 
 

@@ -42,7 +42,7 @@ router.post('/add', arrMiddleware, (req, res) => {
                          connection.query(query, (err, result) => {
                               if (err) return res.status(400).json({ success: false, message: "Erorr add booking" });
 
-                              let queryUpdateDoctorTime = `update doctor_time set active = 0 where idTime = ${idTime}`;
+                              let queryUpdateDoctorTime = `update doctor_time set active = 0 where idStaff = ${idStaff} and idTime = ${idTime}`;
                               connection.query(queryUpdateDoctorTime, (err, resultUDT) => {
                                    if (err) return res.status(400).json({ success: false, message: "Erorr update time" })
                                    return res.status(200).json({ success: true, message: "Booking success" });
@@ -93,6 +93,46 @@ router.post('/getDoctorTime', (req, res) => {
           return res.status(200).json({ success: true, message: "Get time doctor success", result });
      })
 })
+
+
+router.get('/getAllExaminationSchedule', (req, res) => {
+     let query = `select booking.idBooking, examination_hours.slotTime, booking.date, patient.name as namePatient, staff.name as nameDoctor, status.statusName, booking.active
+                 from booking, examination_hours, patient, doctor_info, status, staff, doctor_time
+                 where booking.idTime = doctor_time.idTime and booking.idPatient = patient.idPatient and
+                 booking.idStaff = doctor_info.idStaff and booking.idStatus = status.idStatus and doctor_info.idStaff = staff.idStaff
+                 and doctor_time.idTime = examination_hours.idTime group by booking.idBooking`
+     connection.query(query, (err, result) => {
+           
+          if (err) return res.status(400).json({ success: false, message: "Erorr get examination schedule success" })
+          return res.status(200).json({ success: true, message: "Get examination schedule success", result })
+     })
+})
+
+router.get('/getAllExaminationScheduleInPatient', (req, res) => {
+     const idPatient = req.body.idPatient;
+     let query = `select booking.idBooking, examination_hours.slotTime, booking.date, patient.name as namePatient, staff.name as nameDoctor, status.statusName, booking.active
+                 from booking, examination_hours, patient, doctor_info, status, staff, doctor_time
+                 where booking.idTime = doctor_time.idTime and booking.idPatient = patient.idPatient and
+                 booking.idStaff = doctor_info.idStaff and booking.idStatus = status.idStatus and doctor_info.idStaff = staff.idStaff
+                 and doctor_time.idTime = examination_hours.idTime and booking.idPatient = ${idPatient} group by booking.idBooking`
+     connection.query(query, (err, result) => {
+           console.log(err)
+          if (err) return res.status(400).json({ success: false, message: "Erorr get examination schedule success" })
+          return res.status(200).json({ success: true, message: "Get examination schedule success", result })
+     })
+})
+
+
+router.get('/getAllTimeInDoctor', (req, res) => {
+     const idStaff = req.body.idStaff
+     let query = `select patient.name, examination_hours.slotTime, booking.date from booking, examination_hours, patient, doctor_time
+                 where booking.idTime = doctor_time.idTime and doctor_time.idTime = examination_hours.idTime
+                 and patient.idPatient = booking.idPatient and booking.idStatus = 1 and booking.idStaff = ${idStaff} group by idBooking`;
+     connection.query(query, (err, result) => {
+         if (err) return res.status(400).json({ success: false, message: "Erorr get all time doctor", err })
+         return res.status(200).json({ success: true, message: "Get all time doctor success", result });
+     })
+ })
 
 
 
