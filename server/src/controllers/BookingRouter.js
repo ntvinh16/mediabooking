@@ -9,44 +9,24 @@ const connection = require('../config/connectDB');
 
 
 
-
-
 router.post('/add', (req, res) => {
 
      const { idTime, idStaff, idStatus, idPatient, date, idSpecialist, idPayment } = req.body;
 
-     let queryCheck = `select idTime, date, idPatient from booking where idStaff = ${idStaff} and idPatient = ${idPatient} and active = 1`;
+     let queryCheck = `select idTime, date, idPatient, idStaff from booking where active = 1`;
      connection.query(queryCheck, (err, resultCheck) => {
           if (err) return res.status(400).json({ success: false, message: "Erorr check " });
-          // return res.status(200).json({success: true, message: "ok", resultCheck})
+          
           var checkDate = true;
 
           for (let i = 0; i < resultCheck.length; i++) {
                if (date === resultCheck[i].date) {
-                    console.log(resultCheck[i].date)
                     checkDate = false;
                     break;
                }
           }
 
           if (checkDate) {
-               // let queryDoctorTime = `select date as dateDoctorTime from doctor_time where idStaff = ${idStaff} and active = 1  group by date`
-               // connection.query(queryDoctorTime, (err, resultDoctorTime) => {
-               //      if (err) return res.status(400).json({ success: false, message: "erer" })
-               //      var checkDateDoctorTime = false;
-
-               //      for (let i = 0; i < resultDoctorTime.length; i++) {
-               //           if (date === resultDoctorTime[i].dateDoctorTime) {
-               //                // console.log(resultDoctorTime[i].dateDoctorTime)
-               //                checkDateDoctorTime = true;
-               //                break;
-               //           }
-               //      }
-               //      if (checkDateDoctorTime) {
-
-               //      } else return res.status(200).json({ success: true, message: "okok", resultDoctorTime })
-               //      // console.log(checkDateDoctorTime)
-               // })
                let queryUpdateDoctorTime = `update doctor_time set active = 0 where idStaff = ${idStaff} and idTime = ${idTime} and date = '${date}'`;
                connection.query(queryUpdateDoctorTime, (err, resultUDT) => {
                     if (err) return res.status(400).json({ success: false, message: "Erorr update time", err })
@@ -60,99 +40,46 @@ router.post('/add', (req, res) => {
                })
 
           } else {
-               var checkTime = false;
+               var checkTime = true;
                for (let i = 0; i < resultCheck.length; i++) {
                     if (idTime === resultCheck[i].idTime.toString()) {
-                         checkTime = true;
+                         checkTime = false;
                          break;
                     }
                }
-               // console.log(checkTime);
-               if (checkTime) {
 
+               var checkPatien = true;
+               for (let i = 0; i < resultCheck.length; i++) {
+                    if (idPatient === resultCheck[i].idPatient.toString()) {
+                         checkPatien = false;
+                         break;
+                    }
+               }
+
+               var checkStaff = true;
+               for (let i = 0; i < resultCheck.length; i++) {
+                    if (idStaff === resultCheck[i].idStaff.toString()) {
+                         checkStaff = false;
+                         break;
+                    }
+               }
+
+               if ((!checkTime && !checkPatien && checkStaff) || (!checkTime && checkPatien && !checkStaff) || (!checkTime && !checkPatien && !checkStaff)) {
+                    return res.status(400).json({ success: true, message: "Don't booking" })
+               } else {
+                    let queryUpdateDoctorTime = `update doctor_time set active = 0 where idStaff = ${idStaff} and idTime = ${idTime} and date = '${date}'`;
+                    connection.query(queryUpdateDoctorTime, (err, resultUDT) => {
+                         if (err) return res.status(400).json({ success: false, message: "Erorr update time", err })
+
+                         let query = `insert into booking(idTime, idStaff, idStatus, idPatient, date, idSpecialist, idPayment, paymentStatus, active)
+                              values(${idTime}, ${idStaff}, ${idStatus}, ${idPatient}, '${date}', ${idSpecialist}, ${idPayment}, 1, 1)`;
+                         connection.query(query, (err, result) => {
+                              if (err) return res.status(400).json({ success: false, message: "Erorr add booking" });
+                              return res.status(200).json({ success: true, message: "Booking success" });
+                         })
+                    })
                }
           }
-
-
-
-
-          // if (checkDateStaff) {
-          //      var checkTimeStaff = true;
-          //      for (let i = 0; i < resultCheckStaff.length; i++) {
-          //           if (idTime === resultCheckStaff[i].idTime.toString()) {
-          //                checkTimeStaff = false;
-          //                break;
-          //           }
-          //      }
-          //      console.log(checkTimeStaff)
-          //      if (checkTimeStaff) {
-          //           let queryChekPatient = `select idTime, idStaff from booking where idPatient = ${idPatient}`;
-          //           connection.query(queryChekPatient, (err, resultCheckPatient) => {
-          //                if (err) return res.status(400).json({ success: false, message: "Erorr check patient" })
-
-          //                var checkStaffPatient = true;
-          //                for (let i = 0; i < resultCheckPatient.length; i++) {
-          //                     if (idTime === resultCheckPatient[i].idStaff.toString()) {
-          //                          checkStaffPatient = false;
-          //                          break;
-          //                     }
-          //                }
-
-          //                if (checkStaffPatient) {
-
-          //                     var checkTimePatient = true;
-          //                     for (let i = 0; i < resultCheckPatient.length; i++) {
-          //                          if (idTime === resultCheckPatient[i].idTime.toString()) {
-          //                               checkTimePatient = false;
-          //                               break;
-          //                          }
-          //                     }
-          //                     if (checkTimePatient) {
-          //                          let query = `insert into booking(idTime, idStaff, idStatus, idPatient, date, idSpecialist, idPayment, paymentStatus, active)
-          //                         values(${idTime}, ${idStaff}, ${idStatus}, ${idPatient}, '${date}', ${idSpecialist}, ${idPayment}, 1, 1)`;
-          //                          connection.query(query, (err, result) => {
-          //                               if (err) return res.status(400).json({ success: false, message: "Erorr add booking" });
-
-          //                               let queryUpdateDoctorTime = `update doctor_time set active = 0 where idStaff = ${idStaff} and idTime = ${idTime}`;
-          //                               connection.query(queryUpdateDoctorTime, (err, resultUDT) => {
-          //                                    if (err) return res.status(400).json({ success: false, message: "Erorr update time" })
-          //                                    return res.status(200).json({ success: true, message: "Booking success" });
-          //                               })
-          //                          })
-
-          //                     } return res.status(200).json({ success: true, message: "Patient has an appointment" })
-          //                }
-          //                else {
-          //                     let query = `insert into booking(idTime, idStaff, idStatus, idPatient, date, idSpecialist, idPayment, paymentStatus, active)
-          //                         values(${idTime}, ${idStaff}, ${idStatus}, ${idPatient}, '${date}', ${idSpecialist}, ${idPayment}, 1, 1)`;
-          //                     connection.query(query, (err, result) => {
-          //                          if (err) return res.status(400).json({ success: false, message: "Erorr add booking" });
-
-          //                          let queryUpdateDoctorTime = `update doctor_time set active = 0 where idPatient = ${idPatient} and idTime = ${idTime}`;
-          //                          connection.query(queryUpdateDoctorTime, (err, resultUDT) => {
-          //                               if (err) return res.status(400).json({ success: false, message: "Erorr update time" })
-          //                               return res.status(200).json({ success: true, message: "Booking success" });
-          //                          })
-          //                     })
-          //                }
-          //           })
-
-          //      } else return res.status(200).json({ success: true, message: "Time reverved" })
-
-          // } else {
-          //      let query = `insert into booking(idTime, idStaff, idStatus, idPatient, date, idSpecialist, idPayment, paymentStatus, active)
-          //                    values(${idTime}, ${idStaff}, ${idStatus}, ${idPatient}, '${date}', ${idSpecialist}, ${idPayment}, 1, 1)`;
-          //      connection.query(query, (err, result) => {
-          //           if (err) return res.status(400).json({ success: false, message: "Erorr add booking" });
-
-          //           let queryUpdateDoctorTime = `update doctor_time set active = 0 where idStaff = ${idStaff} and idTime = ${idTime}`;
-          //           connection.query(queryUpdateDoctorTime, (err, resultUDT) => {
-          //                if (err) return res.status(400).json({ success: false, message: "Erorr update time" })
-          //                return res.status(200).json({ success: true, message: "Booking success" });
-          //           })
-          //      })
-          // }
-
      })
 })
 
