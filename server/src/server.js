@@ -2,6 +2,12 @@
 const express = require('express')
 const nodemailer = require('nodemailer')
 import bodyParser from "body-parser";
+
+
+
+
+// const { VNPay } = require('vn-payments');
+
 const staffRouter = require('./controllers/StaffRouter')
 const loginRouter = require('./controllers/LoginRouter')
 const patientRouter = require('./controllers/PatientRouter')
@@ -10,11 +16,13 @@ const specialistRouter = require('./controllers/SpecialistRouter')
 const doctorinfoRouter = require('./controllers/DoctorInfoRouter');
 const examinationHoursRouter = require('./controllers/ExaminationHoursRouter');
 const statusRouter = require('./controllers/StatusRouter');
-const reExaminationRouter = require('./controllers/ReexaminationRouter');
+const paymentRouter = require('./controllers/PaymentRouter');
 const bookingRouter = require('./controllers/BookingRouter')
 const doctorTimeRouter = require('./controllers/DoctorTimeRouter')
 const historyRouter = require('./controllers/HistoryRouter')
-const emailRouter = require('./controllers/emailRouter')
+const emailRouter = require('./controllers/EmailRouter')
+
+
 
 
 
@@ -38,11 +46,13 @@ app.use('/api/specialist', specialistRouter)
 app.use('/api/doctorinfo', doctorinfoRouter)
 app.use('/api/examinationhours', examinationHoursRouter)
 app.use('/api/status', statusRouter)
-app.use('/api/reexamination', reExaminationRouter)
+app.use('/api/payment', paymentRouter)
 app.use('/api/booking', bookingRouter)
 app.use('/api/doctorTime', doctorTimeRouter)
 app.use('/api/history', historyRouter)
 app.use('/api/email', emailRouter)
+
+
 
 
 

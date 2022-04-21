@@ -12,6 +12,7 @@ router.post('/add', (req, res) => {
         if (resultCheck == '') {
             let query = `insert into doctor_time(idStaff, idTime, date, active) values (${idStaff}, ${idTime}, '${date}', 1)`;
             connection.query(query, (err, result) => {
+                
                 if (err) return res.status(200).json({ success: false, message: "Erorr add not time" });
                 return res.status(200).json({ success: true, message: "Add time success" });
             })
@@ -49,16 +50,16 @@ router.get('/getSingleTime', (req, res) => {
 
 
 
-router.get('/getAllDayDoctor', (req, res) => {
-    const idStaff = req.body.idStaff
-    let query = `select date from doctor_time where idStaff = ${idStaff} group by date`
-
-    connection.query(query, (err, result) => {
-        console.log(err)
-        if (err) return res.status(400).json({ success: false, message: "Erorr get all day doctor" })
-        return res.status(200).json({ success: true, message: "Get all day doctor success", result })
-    })
-})
+// router.get('/getAllDayDoctor', (req, res) => {
+//     const idStaff = req.body.idStaff
+//     let query = `select date, GETDATE() AS currentDate, from doctor_time where idStaff = ${idStaff} group by date`
+//     connection.query(query, (err, result) => {
+//         console.log(result);
+        
+//         // if (err) return res.status(400).json({ success: false, message: "Erorr get all day doctor" })
+//         // return res.status(200).json({ success: true, message: "Get all day doctor success", result })
+//     })
+// })
 
 router.get('/getAllTimeInDay', (req, res) => {
     const { date, idStaff } = req.body

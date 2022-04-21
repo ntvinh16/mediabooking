@@ -36,6 +36,14 @@ module.exports = {
         allowNull: false,
         references: { model: 'Specialist', key: 'idSpecialist' },
       },
+      idPayment: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: 'Payment', key: 'idPayment' },
+      },
+      paymentStatus: {
+        type: Sequelize.INTEGER
+      },
       active: {
         type: Sequelize.INTEGER
       }

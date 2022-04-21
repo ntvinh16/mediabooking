@@ -22,9 +22,8 @@ router.post('/send', (req, res) => {
         let patientName = result[0].patientName;
         let price = result[0].price;
         let departmentName = result[0].departmentName;
-        let linkWeb = 'medicalbooking.com';
+        let linkWeb = 'https://www.facebook.com/Medicalbooking-%C4%90%E1%BA%B7t-l%E1%BB%8Bch-kh%C3%A1m-b%E1%BB%87nh-online-110684594900582';
 
-        
         // create reusable transporter object using the default SMTP transport
 
         let transporter = nodemailer.createTransport({
@@ -38,6 +37,7 @@ router.post('/send', (req, res) => {
         });
 
         // send mail with defined transport object
+        
         let info = await transporter.sendMail({
             from: '"Medical booking" <medicalbooking.care@gmail.com', // sender address
             to: ricverEmail, // list of receivers
@@ -52,7 +52,7 @@ router.post('/send', (req, res) => {
             <div><b>Giá khám: ${price}</b></div>
             <p>Cảm ơn bạn đặt sử dụng dịch vụ của chúng tôi, chúng tôi luôn mang lại trãi nghiệm tốt nhất cho khách hàng</p>
             <p>Nếu bạn có thắc mắc gì vui lòng click vào đường link bên dưới:</p>
-            <a>${linkWeb}</a>
+            <a href="${linkWeb}">Chuyển đến trang chủ</a>
             `, // html body
         });
         return res.status(200).json({success: true, message: "Send mail success"})
@@ -63,4 +63,6 @@ router.post('/send', (req, res) => {
 
 
 module.exports = router
-// module.exports = router
+
+
+

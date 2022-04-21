@@ -44,6 +44,41 @@ router.post('/staff', (req, res) => {
 
 })
 
-//Login for Admin
+//Login for Patient
+
+router.post('/patient', (req, res) => {
+    const { email, password } = req.body;
+
+    if (email === '') return res.status(200).json({ success: false, message: "email empty" });
+    if (password === '') return res.status(200).json({ success: false, message: "password empty" });
+
+
+    let query = `select name, email from patient where email='${email}' and active = 1 `;
+
+
+    connection.query(query, (err, result) => {
+
+        if (err) return res.status(400).json({ success: false, message: "Erorr get email patient" });
+
+        if (result.length > 0) {
+            let queryPassword = `select password from patient where email='${email}'`;
+            connection.query(queryPassword, async (errs, resultPassword) => {
+
+                if (errs) return res.status(400).json({ success: false, message: "Erorr get password patient" });
+
+                if (resultPassword.length > 0) {
+                    const condition = await bcrypt.compareSync(password, resultPassword[0].password);
+                    if (condition) return res.status(200).json({ success: true, message: "login success", result });
+                    return res.status(200).json({ success: true, message: "password false" });
+                }
+            })
+        } else {
+            return res.status(200).json({ success: true, message: "email invalid" });
+
+        }
+    })
+
+
+})
 
 module.exports = router;
