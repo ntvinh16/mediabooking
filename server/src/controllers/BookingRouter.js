@@ -1,11 +1,9 @@
 const express = require('express')
 const router = express.Router();
 const connection = require('../config/connectDB');
-// const { checkvaluesBooking, checkvaluesTime, checkvaluesStatus } = require('./middleware/booking_middleware');
-// const middleware = require('./middleware/booking_middleware');
+const { checkvaluesBooking, checkvaluesTime, checkvaluesStatus } = require('./middleware/info_middleware');
+const middleware = require('./middleware/info_middleware');
 
-// const arrMiddleware = [middleware.checkvaluesPatient, middleware.checkvaluesSpecialist,
-// middleware.checkvaluesStaff, middleware.checkvaluesStatus, middleware.checkvaluesTime];
 
 
 

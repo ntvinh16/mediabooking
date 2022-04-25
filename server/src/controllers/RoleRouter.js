@@ -24,28 +24,20 @@ router.patch('/edit', (req, res) => {
         if(err) return res.status(400).json({success: false, message: "Erorr"})
 
         let oldRoleName = result[0].roleName;
-        
-
         let roleNames;
-
-
         if(roleName === '') {roleNames = oldRoleName} else {roleNames = roleName}
         
-
         let query1 = `update role set roleName = '${roleNames}' where idRole='${idRole}'`
-
         connection.query(query1, (err, result) => {
             if(err) return res.status(400).json({success: false, message: "Erorr1"})
             return res.status(200).json({success: true, message: "Edit success"})
         })
-    
     })
 })
 
 router.delete('/delete', (req, res) => {
     const idRole = req.body.idRole;
     let query = `select * from role  where idRole='${idRole}'`
-
     connection.query(query, (err, result) => {
         if(err) return res.status(400).json({success: false, message: "Erorr"});
 

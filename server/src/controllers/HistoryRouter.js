@@ -18,8 +18,7 @@ router.post('/add', (req, res) => {
         let date = result[0].date;
         let idStaff = result[0].idStaff;
         let idPatient = result[0].idPatient;
-        // let idStatus = result[0].idStatus;
-       
+        
         let queryAddHistory = `insert into history(idBooking, idTime, date, idStaff, idPatient) values(${idBooking}, ${idTime}, '${date}', ${idStaff}, ${idPatient})`
         connection.query(queryAddHistory, (err, resultAdd) => {
             if(err) return res.status(400).json({success: false, message: "Erorr add history"});

@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router();
 const connection = require('../config/connectDB');
 const { checkvaluesStaff } = require('./middleware/booking_middleware');
-const middleware = require('./middleware/booking_middleware')
+const middleware = require('./middleware/info_middleware')
 
 
 router.post('/add', checkvaluesStaff, (req, res) => {

@@ -21,19 +21,10 @@ router.patch('/edit', (req, res) => {
     connection.query(query, (err, result) => {
  
         if(err) return res.status(400).json({success: false, message: "Erorr"});
- 
         let slotTimeOld = result[0].slotTime;
-        
-
-        
-
         let slotTimes;
 
-
         if(slotTime === '') {slotTimes = slotTimeOld} else {slotTimes = slotTime}
-        
-
-        
         let query1 = `update examination_hours set slotTime = '${slotTimes}' where idTime = ${idTime}`;
         connection.query(query1, (err, result1) => {
             if(err) return res.status(400).json({success: false, message: "Erorr1"});
